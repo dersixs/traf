@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>vertoxe · смена кодового слова</title>
+<style>
+  body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#0a0a0a;color:#f1f4ec;font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+  main{width:100%;max-width:560px;padding:32px;background:#121411;border:1px solid #323829;border-radius:22px}
+  h1{margin:0 0 8px;font-size:1.6rem}
+  p{color:#c4cabb;margin:0 0 20px}
+  input,textarea{width:100%;box-sizing:border-box;padding:14px 16px;color:#f1f4ec;font:inherit;background:#0a0a0a;border:1px solid #323829;border-radius:12px;outline:none}
+  input:focus,textarea:focus{border-color:#b6ff00}
+  textarea{margin-top:16px;min-height:96px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem;resize:vertical}
+  button{margin-top:12px;padding:12px 20px;font:inherit;font-weight:600;color:#0a0a0a;background:#b6ff00;border:0;border-radius:12px;cursor:pointer}
+  ol{color:#c4cabb;padding-left:20px} code{color:#b6ff00}
+</style>
+</head>
+<body>
+<main>
+  <h1>Смена кодового слова</h1>
+  <p>Введите новое слово (регистр не важен). Страница посчитает его хэш. Само слово нигде не сохраняется и никуда не отправляется.</p>
+  <input id="w" type="text" placeholder="Новое кодовое слово" autocomplete="off" spellcheck="false">
+  <textarea id="o" readonly placeholder="Здесь появится хэш"></textarea>
+  <button id="c" type="button">Скопировать хэш</button>
+  <ol>
+    <li>Откройте <code>index.html</code> в текстовом редакторе.</li>
+    <li>Найдите строку <code>window.VX_KEY_HASH = "..."</code> вверху файла.</li>
+    <li>Замените значение в кавычках на хэш отсюда и сохраните файл.</li>
+  </ol>
+</main>
+<script>
+  var w=document.getElementById('w'),o=document.getElementById('o');
+  w.addEventListener('input',function(){
+    var v=w.value.trim().toLowerCase();
+    if(!v){o.value='';return;}
+    crypto.subtle.digest('SHA-256',new TextEncoder().encode(v)).then(function(b){
+      o.value=Array.prototype.map.call(new Uint8Array(b),function(x){return('0'+x.toString(16)).slice(-2)}).join('');
+    });
+  });
+  document.getElementById('c').addEventListener('click',function(){if(o.value){o.select();document.execCommand('copy');}});
+</script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="dark">
+<title>vertoxe · вставка текстов</title>
+<style>
+  :root{--bg:#0a0a0a;--surface:#121411;--line:#242822;--line2:#323829;--text:#f1f4ec;--text2:#c4cabb;--muted:#8b9384;--acid:#b6ff00;--ink:#0a0a0a;color-scheme:dark}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;padding:20px 16px 60px;background:radial-gradient(900px 400px at 50% -10%,rgba(182,255,0,.12),transparent 70%),var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+  main{width:100%;max-width:760px;margin:0 auto}
+  h1{margin:8px 0 6px;font-size:clamp(1.7rem,6vw,2.4rem);line-height:1.15;letter-spacing:.01em}
+  h1 span{color:var(--acid)}
+  .lead{margin:0 0 26px;color:var(--text2)}
+  .step{margin:0 0 16px;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:20px}
+  .step h2{display:flex;align-items:center;gap:12px;margin:0 0 6px;font-size:1.1rem}
+  .step h2 i{display:grid;place-items:center;width:30px;height:30px;flex:none;font-style:normal;font-weight:800;color:var(--ink);background:var(--acid);border-radius:9px}
+  .step p{margin:0 0 14px;color:var(--muted);font-size:.93rem}
+  select,textarea{width:100%;padding:14px 16px;color:var(--text);font:inherit;background:var(--bg);border:1px solid var(--line2);border-radius:14px;outline:none}
+  select:focus,textarea:focus{border-color:var(--acid);box-shadow:0 0 0 4px rgba(182,255,0,.1)}
+  textarea{min-height:260px;resize:vertical;font-size:.95rem;line-height:1.5}
+  input[type=file]{width:100%;padding:14px;color:var(--text2);background:var(--bg);border:1px dashed var(--line2);border-radius:14px}
+  input[type=file]::file-selector-button{margin-right:12px;padding:9px 14px;font:inherit;font-weight:700;color:var(--ink);background:var(--acid);border:0;border-radius:10px}
+  button.go{width:100%;min-height:54px;font:inherit;font-weight:800;font-size:1.02rem;color:var(--ink);background:var(--acid);border:0;border-radius:14px;cursor:pointer}
+  button.go:disabled{opacity:.4;cursor:not-allowed}
+  .row{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:10px;color:var(--muted);font-size:.86rem}
+  .msg{margin-top:14px;padding:12px 14px;border-radius:12px;font-size:.93rem;display:none}
+  .msg.ok{display:block;color:var(--acid);background:rgba(182,255,0,.08);border:1px solid rgba(182,255,0,.35)}
+  .msg.err{display:block;color:#ff8a70;background:rgba(255,106,77,.08);border:1px solid rgba(255,106,77,.35)}
+  details{margin-top:8px;color:var(--text2)} summary{cursor:pointer;color:var(--text)} code{color:var(--acid)}
+  pre{margin:10px 0 0;padding:14px;white-space:pre-wrap;overflow-wrap:anywhere;background:var(--bg);border:1px solid var(--line);border-radius:12px;color:var(--text2);font-size:.85rem}
+</style>
+</head>
+<body>
+<main>
+  <h1>Вставка текстов <span>в сайт</span></h1>
+  <p class="lead">Вставьте большой текст сюда, и страница сама подставит его в сайт. Ничего не нужно править руками. Всё работает на вашем устройстве, текст никуда не отправляется.</p>
+
+  <section class="step">
+    <h2><i>1</i> Выберите файл index.html</h2>
+    <p>Тот, что лежит в папке сайта рядом с этим файлом.</p>
+    <input id="file" type="file" accept=".html,text/html">
+  </section>
+
+  <section class="step">
+    <h2><i>2</i> Куда вставить</h2>
+    <select id="block">
+      <option value="manual">Instagram мануал (весь текст целиком)</option>
+      <option value="payouts">Как строятся выплаты (весь текст целиком)</option>
+      <option value="about">Материалы: что это такое и как с этим работать</option>
+      <option value="hashtags">Хештеги</option>
+      <option value="music">Список музыки</option>
+    </select>
+  </section>
+
+  <section class="step">
+    <h2><i>3</i> Вставьте текст</h2>
+    <p>Копируйте откуда угодно: Telegram, Notion, Word, Google Docs. Старый текст в этом разделе будет заменён.</p>
+    <textarea id="text" placeholder="Вставьте сюда весь текст целиком..." spellcheck="false"></textarea>
+    <p style="margin:12px 0 8px">Или выберите готовый текстовый файл (.txt):</p>
+    <input id="txt" type="file" accept=".txt,.md,text/plain">
+    <div class="row"><span id="count">0 символов</span></div>
+    <details>
+      <summary>Как оформить текст (необязательно)</summary>
+      <pre>## Подзаголовок     крупный подзаголовок (попадёт в оглавление)
+### Мелкий заголовок
+- пункт             список
+1. шаг              нумерованные шаги
+&gt; Подсказка         выделенный блок
+&gt; ! Важно           красный блок
+**жирный**          выделение
+---                 линия
+
+Если не использовать «##», короткие строки-заголовки
+сайт найдёт сам.</pre>
+    </details>
+  </section>
+
+  <section class="step">
+    <h2><i>4</i> Скачайте готовый сайт</h2>
+    <p>Скачается новый index.html. Положите его в папку сайта вместо старого.</p>
+    <button class="go" id="go" disabled>Скачать index.html</button>
+    <div class="msg" id="msg"></div>
+  </section>
+</main>
+<script>
+(function () {
+  var file = document.getElementById("file"), text = document.getElementById("text"),
+      block = document.getElementById("block"), go = document.getElementById("go"),
+      msg = document.getElementById("msg"), count = document.getElementById("count");
+  var source = "";
+
+  function say(kind, t) { msg.className = "msg " + kind; msg.textContent = t; }
+  function refresh() {
+    count.textContent = text.value.length.toLocaleString("ru-RU") + " символов";
+    go.disabled = !(source && text.value.trim());
+  }
+
+  file.addEventListener("change", function () {
+    var f = file.files[0];
+    if (!f) return;
+    var r = new FileReader();
+    r.onload = function () {
+      source = String(r.result);
+      if (source.indexOf('data-block="manual"') === -1) { source = ""; say("err", "Это не тот файл. Нужен index.html от сайта vertoxe."); }
+      else say("ok", "Файл загружен. Теперь вставьте текст.");
+      refresh();
+    };
+    r.readAsText(f, "utf-8");
+  });
+  text.addEventListener("input", refresh);
+  document.getElementById("txt").addEventListener("change", function () {
+    var f = this.files[0];
+    if (!f) return;
+    var r = new FileReader();
+    r.onload = function () { text.value = String(r.result); refresh(); };
+    r.readAsText(f, "utf-8");
+  });
+
+  go.addEventListener("click", function () {
+    var re = new RegExp('(<script[^>]*data-block="' + block.value + '"[^>]*>)([\\s\\S]*?)(<\/script>)');
+    if (!re.test(source)) { say("err", "В файле не найден этот раздел."); return; }
+    var body = text.value.replace(/\r\n?/g, "\n").replace(/<\/script/gi, "</​script").replace(/\s+$/, "");
+    var out = source.replace(re, function (m, a, old, c) { return a + "\n" + body + "\n  " + c; });
+    var blob = new Blob([out], { type: "text/html;charset=utf-8" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "index.html";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+    say("ok", "Готово. Файл index.html скачан. Замените им старый и откройте сайт.");
+    source = out;
+  });
+  refresh();
+})();
+</script>
+</body>
+</html>
